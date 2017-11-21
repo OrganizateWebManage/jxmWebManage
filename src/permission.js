@@ -7,13 +7,5 @@ import { Message } from 'element-ui'
 
 router.beforeEach((to,from,next) => {
     console.log('start');
-    var userInfo={
-      username:'18866661000',
-      password:'123456'
-    }
-    store.dispatch('LoginByUsername',userInfo).then(response => {
-        console.log(response);
-    }).catch(() => {
-      console.log('调用失败');
-    })
+    next()
 })
