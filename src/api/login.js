@@ -10,3 +10,17 @@ export function loginByUsername(username, password) {
     }
   })
 }
+
+export function logout(){
+  return fetch({
+    url: '/web/user/logout',
+    method: 'get'
+  })
+}
+
+export function getUserInfo(){
+  return fetch({
+    url: '/web/forum/loginInfo',
+    method: 'get'
+  })
+}
