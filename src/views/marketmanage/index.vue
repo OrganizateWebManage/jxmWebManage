@@ -9,6 +9,22 @@
 				<!-- <el-form-item>
 					<el-button type="primary" v-on:click="getUsers">查询</el-button>
 				</el-form-item> -->
+				<el-form-item>
+					<el-upload
+		 					class="upload-demo"
+		 					multiple="false"
+		 					action=""
+		 					:on-preview="handlePreview"
+		 					:on-remove="handleRemove"
+		 					:on-change="handleChange"
+		 					:before-upload="beforeUpload"
+		 					:auto-upload="false"
+		 					:multiple="false">
+		 					<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+		 					<!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">导入</el-button> -->
+		 					<div slot="tip" class="el-upload__tip">只能上传apk文件</div>
+	 				</el-upload>
+				</el-form-item>
 				<!-- <el-form-item> -->
 				<!-- </el-form-item> -->
 			</el-form>
@@ -43,9 +59,11 @@
 <script>
 
 import store from '@/store'
-import {searchAppByCondition} from '@/api/searchmarket'
-
-	export default {
+import {importApkFile} from '@/api/uploadFile'
+import {searchAppByCondition,deleteApk} from '@/api/searchmarket'
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
+export default {
 		data() {
 			return {
 				users: [],
@@ -55,25 +73,22 @@ import {searchAppByCondition} from '@/api/searchmarket'
 			}
 		},
 		methods: {
-
 			//获取用户列表
 			getApps() {
-				this.listLoading = false;
-				//NProgress.start();
+				this.listLoading = true;
+				NProgress.start();
 				searchAppByCondition().then(response => {
 					console.log(response)
 					this.users=response.data.message
 					this.total = response.data.message.length;
+					this.listLoading = false;
+					NProgress.done();
 				}).catch(error => {
-					// console.log(error)
+					this.listLoading = false;
+					NProgress.done();
+					console.log(error)
 					reject(error)
 				})
-				// getUserListPage(para).then((res) => {
-				// 	this.total = res.data.total;
-				// 	this.users = res.data.users;
-				// 	this.listLoading = false;
-				// 	//NProgress.done();
-				// });
 			},
 			//删除
 			handleDel: function (index, row) {
@@ -81,22 +96,54 @@ import {searchAppByCondition} from '@/api/searchmarket'
 					type: 'warning'
 				}).then(() => {
 					this.listLoading = true;
-					//NProgress.start();
-					let para = { id: row.id };
-					console.log(para);
-					// removeUser(para).then((res) => {
-					// 	this.listLoading = false;
-          //
-					// 	this.getUsers();
-					// });
+					NProgress.start()
+					deleteApk(row.id).then((res) => {
+						this.listLoading = false;
+       			NProgress.done();
+						this.getApps();
+					});
 				}).catch(() => {
-
+					this.listLoading = false;
+					NProgress.done();
 				});
 			},
 			//显示新增界面
 			handleAdd: function () {
 
-			}
+			},
+		 	handleRemove(file) {
+			 		console.log("handleRemove");
+		 	},
+		 	handlePreview(file) {
+			 		console.log("handlePreview");
+		 	},
+		 	handleChange(file){
+			 		console.log("handleChange");
+					console.log(file.raw);
+					let type = file.name.split('.')
+      		if (type[1] === 'apk') {
+							console.log("格式正确")
+      		} else {
+						  console.log("上传文件只能是 apk 格式!")
+        			return false
+      		}
+					this.listLoading = true;
+					var formdata = new FormData();
+	        formdata.append('file',file.raw);
+					importApkFile(formdata).then(response => {
+						console.log(response)
+						this.listLoading = false;
+						this.getApps();
+					}).catch(error => {
+						console.log(error)
+						this.listLoading = false;
+						reject(error)
+					})
+		 	},
+		 	beforeUpload: function (file) {
+			 		console.log("beforeUpload")
+			 		//这里是重点，将文件转化为formdata数据上传
+		 	}
 		},
 		mounted() {
 			this.getApps();
@@ -106,5 +153,18 @@ import {searchAppByCondition} from '@/api/searchmarket'
 </script>
 
 <style scoped>
+.uptemp .el-upload-list {
+	 	position: absolute;
+	 	left: 140px;
+	 	top: 0;
+	 	width: 50%;
+ }
 
+ .uptemp {
+	 position: relative;
+ }
+
+ .uptemp .el-upload-list .el-upload-list__item {
+	 margin-top: 0;
+ }
 </style>

@@ -22,11 +22,6 @@
       </el-form-item>
 
       <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
-
-      <label for="file" style="color:red">上传
-      <input type="file" id="file" accept=".apk" @change="uploadFile" style="display:none;">
-      </label>
-
       <el-button class='thirdparty-button' type="primary" @click='showDialog=true'>打开第三方登录</el-button>
     </el-form>
 
@@ -89,15 +84,6 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          // var userInfo={
-          //   username:'18866661000',
-          //   password:'123456'
-          // }
-          // store.dispatch('LoginByUsername',userInfo).then(response => {
-          //     console.log(response);
-          // }).catch(() => {
-          //   console.log('调用失败');
-          // })
           console.log(this.loginForm);
           store.dispatch('LoginByUsername', this.loginForm).then(response => {
             console.log(response);
@@ -113,16 +99,6 @@ export default {
           return false
         }
       })
-    },
-    uploadFile:function(ele){
-        var formdata = new FormData();
-        formdata.append('file',ele.target.files[0]);
-        importApkFile(formdata).then(response => {
-          console.log(response)
-        }).catch(error => {
-          console.log(error)
-          reject(error)
-        })
     },
     afterQRScan() {
           // const hash = window.location.hash.slice(1)

@@ -6,3 +6,10 @@ export function searchAppByCondition(){
     method: 'get',
   })
 }
+
+export function deleteApk(apkId){
+  return fetch({
+    url: '/web/backstage/deleteApk/'+apkId,
+    method: 'get',
+  })
+}
