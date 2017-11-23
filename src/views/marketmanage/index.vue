@@ -45,14 +45,24 @@
 			</el-table-column>
 			<el-table-column prop="versionName" label="版本号" width="200" sortable>
 			</el-table-column>
-			<el-table-column prop="addr" label="排序" width="200" sortable>
+			<el-table-column prop="order" label="排序" width="200" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="200">
 				<template scope="scope">
-					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					<el-button size="small" @click="handleOrder(scope.$index, scope.row)">排序</el-button>
+					<el-button size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+
+		<el-dialog title="排序" :visible.sync="orderVisible" style="width:900px">
+         <el-input @change="checkNo(orderValue)" :maxlength="6" style="width: 120px"
+				 size="small" type="text" v-model="orderValue"></el-input>
+				 <div slot="footer" class="dialog-footer">
+					 	<el-button @click="orderVisible = false">取消</el-button>
+						<el-button type="primary"  @click="setOrder(orderValue)" :loading="orderLoading">排序</el-button>
+					</div>
+		</el-dialog >
 	</section>
 </template>
 
@@ -60,7 +70,7 @@
 
 import store from '@/store'
 import {importApkFile} from '@/api/uploadFile'
-import {searchAppByCondition,deleteApk} from '@/api/searchmarket'
+import {searchAppByCondition,deleteApk,setOrder} from '@/api/searchmarket'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 export default {
@@ -69,7 +79,11 @@ export default {
 				users: [],
 				total: 0,
 				page: 1,
+				orderValue: '',
 				listLoading: false,
+				orderVisible: false,
+				orderLoading:false,
+				apkId:''
 			}
 		},
 		methods: {
@@ -89,6 +103,36 @@ export default {
 					console.log(error)
 					reject(error)
 				})
+			},
+			setOrder: function(value){
+  			 if(value===''){
+					 	console.log("排序不能为空");
+						return false;
+				 }
+				 this.orderLoading = true;
+				 NProgress.start()
+				 setOrder(this.apkId,value).then((res) => {
+					 console.log(res);
+					 this.orderLoading = false;
+					 this.orderVisible=false;
+					 NProgress.done();
+					 this.getApps();
+				 });
+			},
+			handleOrder: function (index, row) {
+				this.orderVisible = true;
+				this.orderValue=row.order;
+				this.apkId=row.id;
+			},
+			checkNo(value){
+				let reg= /^[1-9]\d*$/;
+				if(value){
+					if(value>999999||new RegExp(reg).test(value)==false){
+						setTimeout(()=>{
+							  this.orderValue='';
+						},500);
+					}
+				}
 			},
 			//删除
 			handleDel: function (index, row) {
@@ -152,7 +196,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 .uptemp .el-upload-list {
 	 	position: absolute;
 	 	left: 140px;

@@ -13,3 +13,10 @@ export function deleteApk(apkId){
     method: 'get',
   })
 }
+
+export function setOrder(apkId,order){
+  return fetch({
+    url: '/web/backstage/setOrder/'+apkId+"/"+order,
+    method: 'get',
+  })
+}
