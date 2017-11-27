@@ -41,6 +41,7 @@ import store from '@/store'
 import {importApkFile} from '@/api/uploadFile'
 import { getToken } from '@/utils/auth'
 
+
 export default {
   components: { socialSign },
   name: 'login',
@@ -89,7 +90,9 @@ export default {
           store.dispatch('LoginByUsername', this.loginForm).then(response => {
             this.loading = false
             if(getToken()){
-              this.$router.push({ path: '/' })
+              store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+                this.$router.push({ path: '/' })
+              })
             }
                 // this.showDialog = true
           }).catch(() => {

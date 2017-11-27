@@ -57,6 +57,8 @@ const user={
     GetUserInfo({commit,state}){
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
+          console.log("获取个人信息")
+          console.log(response);
           const data = response.data
           commit('SET_NAME', data.userName)
           commit('SET_AVATAR', data.avatar)
@@ -64,7 +66,7 @@ const user={
           const user={}
           user.name=data.userName
           user.avatar=data.avatar
-          sessionStorage.setItem('user',JSON.stringfy(user))
+          sessionStorage.setItem('user',JSON.stringify(user))
           resolve(response)
         }).catch(error => {
           reject(error)
