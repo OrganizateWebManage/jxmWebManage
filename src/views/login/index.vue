@@ -39,6 +39,7 @@ import { isvalidUsername } from '@/utils/validate'
 import socialSign from './socialsignin'
 import store from '@/store'
 import {importApkFile} from '@/api/uploadFile'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: { socialSign },
@@ -86,9 +87,10 @@ export default {
           this.loading = true
           console.log(this.loginForm);
           store.dispatch('LoginByUsername', this.loginForm).then(response => {
-            console.log(response);
             this.loading = false
-            this.$router.push({ path: '/' })
+            if(getToken()){
+              this.$router.push({ path: '/' })
+            }
                 // this.showDialog = true
           }).catch(() => {
              console.log('调用失败');
