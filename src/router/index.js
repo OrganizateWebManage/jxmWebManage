@@ -26,7 +26,7 @@ export const constantRouterMap = [
       children: [
           { path: '/main', component: HelloWorld, name: '主页', hidden: true },
           { path: '/table', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '应用市场' },
-          { path: '/form', component: HelloWorld, name: 'Form' },
+          { path: '/teaValidate', component: (resolve)=>require(['views/teachervalidate/index.vue'],resolve), name: '老师认证' },
           { path: '/user', component: HelloWorld, name: '列表' },
       ]
     },

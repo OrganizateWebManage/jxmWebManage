@@ -33,7 +33,7 @@
 		<!--列表-->
 		<el-table :data="users" highlight-current-row v-loading="listLoading" style="width: 100%;">
 			<el-table-column label="应用图标" width="200"  sortable>
-       <template scope="scope">
+       <template slot-scope="scope">
            <img :src="scope.row.logo" width="40" height="40" class="head_pic"/>
        </template>
 			</el-table-column>
@@ -48,7 +48,7 @@
 			<el-table-column prop="order" label="排序" width="200" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="200">
-				<template scope="scope">
+				<template slot-scope="scope">
 					<el-button size="small" @click="handleOrder(scope.$index, scope.row)">排序</el-button>
 					<el-button size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
