@@ -20,7 +20,7 @@ export function logout(){
 
 export function getUserInfo(){
   return fetch({
-    url: '/web/forum/loginInfo',
+    url: '/web/user/loginInfo',
     method: 'get'
   })
 }
