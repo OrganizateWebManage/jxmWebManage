@@ -14,7 +14,7 @@ Vue.use(Router)
 //     }
 //   ]
 // })
-
+export const constantPaths=[{path:"/table"},{path:'/teaValidate'},{path: '/content'},{path: '/userRole'}]
 
 export const constantRouterMap = [
     { path: '/login', component:(resolve)=>require(['views/login/index.vue'],resolve), hidden: true },
@@ -28,7 +28,7 @@ export const constantRouterMap = [
           { path: '/table', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '应用市场' },
           { path: '/teaValidate', component: (resolve)=>require(['views/teachervalidate/index.vue'],resolve), name: '老师认证' },
           { path: '/content', component: (resolve)=>require(['views/contentControl/index.vue'],resolve), name: '内容管理' },
-          { path: '/user', component: HelloWorld, name: '列表' },
+          { path: '/userRole', component: (resolve)=>require(['views/userRole/index.vue'],resolve), name: '角色管理' },
       ]
     },
     {
