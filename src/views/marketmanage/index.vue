@@ -45,15 +45,25 @@
 			</el-table-column>
 			<el-table-column prop="versionName" label="版本号" width="200" sortable>
 			</el-table-column>
-			<el-table-column prop="order" label="排序" width="200" sortable>
-			</el-table-column>
-			<el-table-column label="操作" width="200">
+			<el-table-column prop="type" label="类型" width="200" sortable>
 				<template slot-scope="scope">
+					<span v-if="scope.row.type==0" width="40" height="40" >系统</span>
+					<span v-if="scope.row.type==1" width="40" height="40" >复兰</span>
+					<span v-if="scope.row.type==2" width="40" height="40" >三方</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop="order" label="排序" width="50" sortable>
+			</el-table-column>
+			<el-table-column label="操作" width="300">
+				<template slot-scope="scope">
+					<el-button size="small" @click="handleType(scope.$index, scope.row)">类型</el-button>
 					<el-button size="small" @click="handleOrder(scope.$index, scope.row)">排序</el-button>
 					<el-button size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+
+
 
 		<el-dialog title="排序" :visible.sync="orderVisible" style="width:900px">
          <el-input @change="checkNo(orderValue)" :maxlength="6" style="width: 120px"
@@ -63,6 +73,16 @@
 						<el-button type="primary"  @click="setOrder(orderValue)" :loading="orderLoading">排序</el-button>
 					</div>
 		</el-dialog >
+
+
+		<el-dialog title="类型更改" :visible.sync="typeVisible" style="width:900px">
+         <el-input @change="checkNo(typeValue)" :maxlength="6" style="width: 120px"
+				 size="small" type="text" v-model="typeValue"></el-input>
+				 <div slot="footer" class="dialog-footer">
+					 	<el-button @click="typeVisible = false">取消</el-button>
+						<el-button type="primary"  @click="updateApkByType(typeValue)" :loading="typeLoading">更改</el-button>
+					</div>
+		</el-dialog >
 	</section>
 </template>
 
@@ -70,7 +90,7 @@
 
 import store from '@/store'
 import {importApkFile} from '@/api/uploadFile'
-import {searchAppByCondition,deleteApk,setOrder} from '@/api/searchmarket'
+import {searchAppByCondition,deleteApk,setOrder,updateApkByType} from '@/api/searchmarket'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 export default {
@@ -83,6 +103,9 @@ export default {
 				listLoading: false,
 				orderVisible: false,
 				orderLoading:false,
+				typeValue:'',
+				typeVisible:false,
+				typeLoading:false,
 				apkId:''
 			}
 		},
@@ -103,6 +126,22 @@ export default {
 					console.log(error)
 					reject(error)
 				})
+			},
+			updateApkByType: function(value){
+				if(value===''){
+					 console.log("类型值不能为空");
+					 return false;
+				}
+				this.typeLoading = true;
+				NProgress.start()
+				updateApkByType(this.apkId,value).then((res) => {
+					console.log(res);
+					this.typeLoading = false;
+					this.typeVisible=false;
+					NProgress.done();
+					this.getApps();
+				});
+
 			},
 			setOrder: function(value){
   			 if(value===''){
@@ -130,9 +169,15 @@ export default {
 					if(value>999999||new RegExp(reg).test(value)==false){
 						setTimeout(()=>{
 							  this.orderValue='';
+								this.typeValue='';
 						},500);
 					}
 				}
+			},
+			handleType:function (index, row) {
+				this.typeVisible = true;
+				this.typeValue=row.type;
+				this.apkId=row.id;
 			},
 			//删除
 			handleDel: function (index, row) {

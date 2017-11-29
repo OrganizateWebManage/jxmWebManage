@@ -20,3 +20,14 @@ export function setOrder(apkId,order){
     method: 'get',
   })
 }
+
+export function updateApkByType(id,type){
+  return fetch({
+    url: '/web/backstage/updateApkByType',
+    method: 'get',
+    params:{
+      id:id,
+      type:type
+    }
+  })
+}
