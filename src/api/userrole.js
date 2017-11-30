@@ -17,3 +17,13 @@ export function saveUserRoleOfPath(pathStr,role){
     }
   })
 }
+
+export function searchUserList(relax){
+  return fetch({
+    url: '/web/community/searchUserList',
+    method: 'get',
+    params:{
+      relax:relax
+    }
+  })
+}
