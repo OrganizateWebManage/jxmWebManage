@@ -30,6 +30,7 @@ export const constantRouterMap = [
           { path: '/teaValidate', component: (resolve)=>require(['views/teachervalidate/index.vue'],resolve), name: '老师认证' },
           { path: '/content', component: (resolve)=>require(['views/contentControl/index.vue'],resolve), name: '内容管理' },
           { path: '/userRole', component: (resolve)=>require(['views/userRole/index.vue'],resolve), name: '角色管理' },
+          { path: '/manageUser', component: (resolve)=>require(['views/userRole/roleUser.vue'],resolve), name: '用户角色管理' }
       ]
     },
     {
