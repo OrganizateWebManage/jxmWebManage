@@ -31,7 +31,7 @@
          </el-table>
          <div slot="footer" class="dialog-footer">
             <el-button @click="userRoleVisible = false">取消</el-button>
-            <el-button type="primary" :loading="roleloading">确定</el-button>
+            <el-button type="primary" :loading="roleloading" @click="addRoleUser">确定</el-button>
           </div>
     </el-dialog >
 
@@ -68,6 +68,9 @@ export default {
 		  addUserRole(){
          this.userRoleVisible=true;
       },
+			addRoleUser(){
+
+			},
       getCurrentRow(index,data){
          this.radio=index;
          this.userId=data.userId;
