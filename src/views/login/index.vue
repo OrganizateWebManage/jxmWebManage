@@ -21,7 +21,7 @@
         </span>
       </el-form-item>
   <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="openQrLogin" :visible="false">打开第三方登录</el-button>
+      <el-button type="primary" style="width:100%;margin-bottom:30px;display:none" @click.native.prevent="openQrLogin" >打开第三方登录</el-button>
       <!-- <el-button class='thirdparty-button' type="primary" @click.native.prevent=='openQrLogin'>打开第三方登录</el-button> -->
     </el-form>
 

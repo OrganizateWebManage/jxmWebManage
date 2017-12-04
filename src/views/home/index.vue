@@ -74,7 +74,7 @@
 
 <script>
 import store from '@/store'
-import { constantRouterMap } from '@/router'
+// import { constantRouterMap } from '@/router'
 
 export default {
 		data() {
@@ -124,6 +124,15 @@ export default {
 				this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
 			}
 		},
+		created(){
+			store.dispatch('GetRouters').then(res => { // 拉取user_info
+				  this.routeList=res
+					console.log("数据获取")
+					console.log(this.routeList)
+			}).catch(() => {
+					console.log('失败');
+			})
+		},
 		mounted() {
 			var user = sessionStorage.getItem('user');
 			console.log(user);
@@ -132,8 +141,7 @@ export default {
 				this.sysUserName = user.name || '';
 				this.sysUserAvatar = user.avatar || '';
 			}
-			this.routeList=constantRouterMap;
-
+			// this.routeList=constantRouterMap;
 		}
 	}
 

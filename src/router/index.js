@@ -14,8 +14,40 @@ Vue.use(Router)
 //     }
 //   ]
 // })
-export const constantPaths=[{path:"/table"},{path:'/teaValidate'},{path: '/content'},{path: '/userRole'}]
+export const constantPaths=[
+  {path:"/table"},
+  {path:'/teaValidate'},
+  {path: '/content'},
+  {path: '/main'},
+  {path: '/fulan'},
+  {path: '/black'},
+  {path: '/schoolTime'},
+  {path: '/systemPhone'},
+  {path: '/content'}
+]
 
+
+export const constantDefaultRoutes=[
+  {
+    path: '/',
+    component: Home,
+    name: '首页',
+    iconCls: 'el-icon-message',//图标样式class
+    children: [
+        { path: '/main', component: HelloWorld, name: '主页', hidden: true }
+    ]
+  },
+  {
+    path: '/',
+    component: Home,
+    name: '导航二',
+    iconCls: 'fa fa-id-card-o',
+    children: [
+        { path: '/page4', component: HelloWorld, name: '页面4' },
+        { path: '/page5', component: HelloWorld, name: '页面5' }
+    ]
+  }
+]
 export const constantRouterMap = [
     { path: '/login', component:(resolve)=>require(['views/login/index.vue'],resolve), hidden: true },
     {

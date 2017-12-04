@@ -6,7 +6,8 @@ export function loginByUsername(username, password) {
     method: 'get',
     params:{
       name:username,
-      pwd:password
+      pwd:password,
+      type:5
     }
   })
 }
@@ -39,6 +40,16 @@ export function loginByQr(userId, tokenId) {
     params:{
       userId:userId,
       tokenId:tokenId
+    }
+  })
+}
+
+export function getPathByRole(role){
+  return fetch({
+    url: '/web/backstage/getPathByRole',
+    method: 'get',
+    params:{
+      role:role
     }
   })
 }

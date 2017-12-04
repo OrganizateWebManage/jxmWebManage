@@ -7,21 +7,16 @@ import { getToken } from '@/utils/auth'
 
 
 router.beforeEach((to,from,next) => {
-    console.log('start');
     NProgress.start() // 开启Progress
     if(getToken()){
-      console.log('enter');
       if (to.path === '/login') {
           next({ path: '/' })
           NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
       }else {
         if (store.getters.flag) {
-          console.log('lll');
           store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-              console.log('getUserInfo');
               next()
           }).catch(() => {
-              console.log('fed');
               store.dispatch('FedLogOut').then(() => {
                 Message.error('验证失败,请重新登录')
                 next({ path: '/login' })

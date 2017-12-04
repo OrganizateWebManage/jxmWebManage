@@ -27,3 +27,21 @@ export function searchUserList(relax){
     }
   })
 }
+
+export function saveUserRole(userId,role){
+  return fetch({
+    url: '/web/backstage/saveUserRole',
+    method: 'get',
+    params:{
+      userId:userId,
+      role:role
+    }
+  })
+}
+
+export function getAllUserRoles(){
+  return fetch({
+    url: '/web/backstage/getAllUserRoles',
+    method: 'get'
+  })
+}
