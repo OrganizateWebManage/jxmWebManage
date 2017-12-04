@@ -27,10 +27,13 @@ export const constantRouterMap = [
           { path: '/main', component: HelloWorld, name: '主页', hidden: true },
           { path: '/table', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '应用市场' },
           { path: '/fulan', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '复兰应用管理' },
+          { path: '/black', component: (resolve)=>require(['views/blackList/index.vue'],resolve), name: '应用黑名单管理' },
+          { path: '/schoolTime', component: (resolve)=>require(['views/schoolTime/index.vue'],resolve), name: '管控默认上课时间' },
+          { path: '/systemPhone', component: (resolve)=>require(['views/systemPhone/index.vue'],resolve), name: '常用电话设置' },
+          { path: '/backTime', component: (resolve)=>require(['views/backTime/index.vue'],resolve), name: '默认回调频率' },
           { path: '/teaValidate', component: (resolve)=>require(['views/teachervalidate/index.vue'],resolve), name: '老师认证' },
           { path: '/content', component: (resolve)=>require(['views/contentControl/index.vue'],resolve), name: '内容管理' },
           { path: '/userRole', component: (resolve)=>require(['views/userRole/index.vue'],resolve), name: '角色管理' },
-          { path: '/manageUser', component: (resolve)=>require(['views/userRole/roleUser.vue'],resolve), name: '用户角色管理' }
       ]
     },
     {
