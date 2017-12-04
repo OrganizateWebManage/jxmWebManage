@@ -1,4 +1,4 @@
-import { loginByUsername,getUserInfo,logout } from '@/api/login'
+import { loginByUsername,getUserInfo,logout,loginByQr } from '@/api/login'
 
 import { getToken,setToken,removeToken } from '@/utils/auth'
 
@@ -30,6 +30,22 @@ const user={
       const username= userInfo.username
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
+          if(response.data.code=="200"){
+            setToken(true);
+            commit('SET_TOKEN', true)
+          }
+          resolve()
+        }).catch(error => {
+          console.log(error)
+          reject(error)
+        })
+      })
+    },
+    LoginByQr({commit},userInfo){
+      console.log(userInfo);
+      const userId= userInfo.userId
+      return new Promise((resolve, reject) => {
+        loginByQr(userId, userInfo.tokenId).then(response => {
           if(response.data.code=="200"){
             setToken(true);
             commit('SET_TOKEN', true)
