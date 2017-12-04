@@ -20,15 +20,18 @@
           <!-- <icon-svg icon-class="eye" /> -->
         </span>
       </el-form-item>
-
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
-      <el-button class='thirdparty-button' type="primary" @click='showDialog=true'>打开第三方登录</el-button>
+  <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="openQrLogin" :visible="false">打开第三方登录</el-button>
+      <!-- <el-button class='thirdparty-button' type="primary" @click.native.prevent=='openQrLogin'>打开第三方登录</el-button> -->
     </el-form>
 
-    <el-dialog title="第三方验证" :visible.sync="showDialog" :visible="false">
-      本地不能模拟，请结合自己业务进行模拟！！！<br/><br/><br/>
+    <el-dialog title="第三方验证" :visible.sync="showDialog" >
+      <!-- 本地不能模拟，请结合自己业务进行模拟！！！<br/><br/><br/>
       邮箱登录成功,请选择第三方验证<br/>
-      <social-sign />
+      <social-sign /> -->
+      <img :src="qrUrl"  v-model="qrUrl" width="200" height="200" class="head_pic">
+      <br/><br/>
+      请进行扫码登录<br/>
     </el-dialog>
 
   </div>
@@ -40,6 +43,7 @@ import socialSign from './socialsignin'
 import store from '@/store'
 import {importApkFile} from '@/api/uploadFile'
 import { getToken } from '@/utils/auth'
+import { getWebSocketToken } from '@/api/login'
 
 
 export default {
@@ -71,7 +75,11 @@ export default {
       },
       pwdType: 'password',
       loading: false,
-      showDialog: false
+      showDialog: false,
+      qrUrl:'',
+      tokenId:'',
+      userId:null,
+      websocket:null
     }
   },
   methods: {
@@ -81,6 +89,17 @@ export default {
       } else {
         this.pwdType = 'password'
       }
+    },
+    getWebSocketInfo(){
+      getWebSocketToken().then(response => {
+        console.log(response)
+        var message=response.data.message
+        this.qrUrl=message.qrUrl;
+        this.tokenId=message.tokenId;
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -105,6 +124,74 @@ export default {
         }
       })
     },
+    openQrLogin(){
+       this.showDialog=true;
+       const that=this;
+       //判断当前浏览器是否支持WebSocket
+       if ('WebSocket' in window) {
+           this.websocket = new WebSocket('ws://' + window.location.host + '/web/ws?tokenId='+this.tokenId);
+           this.websocket.tokenId = this.tokenId;
+       }
+       else {
+           alert('当前浏览器 Not support websocket')
+       }
+
+       //连接发生错误的回调方法
+       this.websocket.onerror = function () {
+          console.log("错误信息");
+       };
+
+       //连接成功建立的回调方法
+       this.websocket.onopen = function () {
+           console.log("WebSocket连接成功");
+       }
+
+       //接收到消息的回调方法
+       this.websocket.onmessage = function (event) {
+           console.log("接收数据");
+           var message = event.data;
+           console.log(message);
+           if (message.indexOf(",") > -1) {
+               var items = message.split(",");
+               if (items[0] == "T20") {
+                   this.userId = items[1];
+                   console.log(this);
+                   this.close();
+               }
+           } else {
+               console.log(event.data);
+           }
+       }
+
+       //连接关闭的回调方法
+       this.websocket.onclose = function () {
+           this.showDialog=false;
+           console.log("WebSocket连接关闭");
+           console.log(this);
+           if (null != this.userId && this.userId != "") {
+               var userInfo = {};
+               userInfo.userId = this.userId;
+               userInfo.tokenId = this.tokenId;
+               console.log(userInfo);
+               store.dispatch('LoginByQr', userInfo).then(response => {
+                 if(getToken()){
+                   store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+                     that.$router.push({ path: '/' })
+                   })
+                 }
+               }).catch(() => {
+                  console.log('调用失败');
+               })
+           }
+       }
+
+       //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+       window.onbeforeunload = function () {
+           console.log("ddd");
+           this.websocket.close();
+       }
+       // window.setTimeout(this.websocket.close(), 1000000);
+    },
     afterQRScan() {
           // const hash = window.location.hash.slice(1)
           // const hashObj = getQueryObject(hash)
@@ -125,6 +212,7 @@ export default {
     }
   },
   created() {
+      this.getWebSocketInfo();
         // window.addEventListener('hashchange', this.afterQRScan)
   },
   destroyed() {

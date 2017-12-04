@@ -24,3 +24,21 @@ export function getUserInfo(){
     method: 'get'
   })
 }
+
+export function getWebSocketToken(){
+  return fetch({
+    url: '/web/appMarket/getWebSocketToken',
+    method: 'get'
+  })
+}
+
+export function loginByQr(userId, tokenId) {
+  return fetch({
+    url: '/web/user/tokenLogin',
+    method: 'get',
+    params:{
+      userId:userId,
+      tokenId:tokenId
+    }
+  })
+}
