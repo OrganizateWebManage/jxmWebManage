@@ -58,7 +58,7 @@ export const constantRouterMap = [
       children: [
           { path: '/main', component: HelloWorld, name: '主页', hidden: true },
           { path: '/table', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '应用市场' },
-          { path: '/fulan', component: (resolve)=>require(['views/marketmanage/index.vue'],resolve), name: '复兰应用管理' },
+          { path: '/fulan', component: (resolve)=>require(['views/systemApp/index.vue'],resolve), name: '初始应用推送管理' },
           { path: '/black', component: (resolve)=>require(['views/blackList/index.vue'],resolve), name: '应用黑名单管理' },
           { path: '/schoolTime', component: (resolve)=>require(['views/schoolTime/index.vue'],resolve), name: '管控默认上课时间' },
           { path: '/systemPhone', component: (resolve)=>require(['views/systemPhone/index.vue'],resolve), name: '常用电话设置' },

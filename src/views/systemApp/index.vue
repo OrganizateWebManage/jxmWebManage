@@ -54,11 +54,9 @@
 			</el-table-column>
 			<el-table-column prop="order" label="排序" width="50" sortable>
 			</el-table-column>
-			<el-table-column label="操作" width="300">
+			<el-table-column label="操作" width="100">
 				<template slot-scope="scope">
-					<el-button size="small" @click="handleType(scope.$index, scope.row)">类型</el-button>
-					<el-button size="small" @click="handleOrder(scope.$index, scope.row)">排序</el-button>
-					<el-button size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					<el-button size="small" @click="handleLoad(scope.$index, scope.row)">系统推送</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
